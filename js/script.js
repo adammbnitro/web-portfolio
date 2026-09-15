@@ -233,7 +233,7 @@ function initContactForm() {
   if (!form) return;
 
   const status = form.querySelector(".form-status");
-  const fields = [...form.querySelectorAll("input, select, textarea")];
+  const fields = [...form.querySelectorAll("input:not([type='hidden']):not([name='bot-field']), select, textarea")];
 
   const getError = (field) => {
     if (!field.validity.valid) {
@@ -261,24 +261,17 @@ function initContactForm() {
 
   fields.forEach((field) => {
     field.addEventListener("blur", () => showFieldState(field));
+    field.addEventListener("invalid", () => {
+      showFieldState(field);
+      status.textContent = "Please correct the highlighted fields.";
+    });
     field.addEventListener("input", () => {
       if (field.getAttribute("aria-invalid") === "true") showFieldState(field);
     });
   });
 
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const fieldStates = fields.map(showFieldState);
-    const firstInvalid = fields.find((_, index) => !fieldStates[index]);
-
-    if (firstInvalid) {
-      status.textContent = "Please correct the highlighted fields.";
-      firstInvalid.focus();
-      return;
-    }
-
-    // Future integration: send validated FormData to a form service or serverless endpoint here.
-    status.textContent = "This form is ready to connect to a secure form endpoint.";
+  form.addEventListener("submit", () => {
+    status.textContent = "";
   });
 }
 

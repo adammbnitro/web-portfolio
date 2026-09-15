@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Before launch: replace this placeholder origin with the final production domain.
+Sitemap: https://replace-with-final-domain.example/sitemap.xml

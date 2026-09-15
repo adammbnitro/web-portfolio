@@ -27,3 +27,15 @@ status: "Demo build"
 - **Change your portrait:** replace `assets/images/adam-mohamed-benkada.webp` with a square WebP image using the same filename.
 - **Update WhatsApp:** open `js/script.js` and add your international `https://wa.me/` link to `WHATSAPP_URL` near the top.
 - **Edit service wording:** open `index.html`, find the Services section, and edit the relevant heading or paragraph.
+
+## Before Going Live
+
+- [ ] Replace the canonical URL placeholder in `index.html`.
+- [ ] Replace the Open Graph URL placeholder in `index.html`.
+- [ ] Add `assets/images/social-preview.jpg` and its Open Graph/Twitter image metadata if needed.
+- [ ] Replace the sitemap domain placeholder in `robots.txt`.
+- [ ] Replace the homepage domain placeholder in `sitemap.xml`.
+- [ ] Test the enquiry form after deployment.
+- [ ] Verify the WhatsApp link.
+- [ ] Run Lighthouse or PageSpeed Insights.
+- [ ] Test the site on mobile.

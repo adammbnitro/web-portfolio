@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 112 48">
+  <title>AMB</title>
+  <g fill="none" stroke-linecap="square" stroke-linejoin="miter" stroke-width="2">
+    <path stroke="#5f615f" d="M2 44 22 2l17 42M9.5 28h21"/>
+    <path stroke="#1a1b1a" d="M35 2 52 44 70 2v42"/>
+    <path stroke="#5f615f" d="M76 2v42m0-42h12c12 0 19 5 19 11s-6 11-18 11H76m13 0c13 0 21 6 21 11s-7 9-22 9H76"/>
+  </g>
+</svg>

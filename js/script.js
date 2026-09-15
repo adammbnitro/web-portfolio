@@ -116,10 +116,11 @@ function initMobileNavigation() {
 
   if (!menuButton || !mobileMenu) return;
 
-  const closeMenu = () => {
+  const closeMenu = (restoreFocus = false) => {
     menuButton.setAttribute("aria-expanded", "false");
     menuButton.setAttribute("aria-label", "Open navigation menu");
     mobileMenu.classList.remove("is-open");
+    if (restoreFocus) menuButton.focus();
   };
 
   menuButton.addEventListener("click", () => {
@@ -134,7 +135,9 @@ function initMobileNavigation() {
   });
 
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeMenu();
+    if (event.key === "Escape" && menuButton.getAttribute("aria-expanded") === "true") {
+      closeMenu(true);
+    }
   });
 
   window.addEventListener("resize", () => {
@@ -284,19 +287,25 @@ function initParticleCanvas() {
 
   let particles = [];
   let animationFrame = 0;
+  let resizeFrame = 0;
+  let isAnimating = false;
   let width = 0;
   let height = 0;
   let particleColor = "225, 225, 220";
 
-  const makeParticle = () => ({
-    x: Math.random() * width,
-    y: Math.random() * height,
-    radius: Math.random() * 1.9 + 0.35,
-    opacity: Math.random() * 0.24 + 0.04,
-    speedX: (Math.random() - 0.5) * 0.075,
-    speedY: -(Math.random() * 0.095 + 0.025),
-    blur: Math.random() > 0.72 ? Math.random() * 3 + 1 : 0
-  });
+  const makeParticle = () => {
+    const opacity = Math.random() * 0.24 + 0.04;
+    return {
+      x: Math.random() * width,
+      y: Math.random() * height,
+      radius: Math.random() * 1.9 + 0.35,
+      opacity,
+      color: `rgba(${particleColor}, ${opacity})`,
+      speedX: (Math.random() - 0.5) * 0.075,
+      speedY: -(Math.random() * 0.095 + 0.025),
+      blur: Math.random() > 0.72 ? Math.random() * 3 + 1 : 0
+    };
+  };
 
   const setCanvasSize = () => {
     const ratio = Math.min(window.devicePixelRatio || 1, 2);
@@ -314,6 +323,9 @@ function initParticleCanvas() {
 
   const updateParticleColor = () => {
     particleColor = getComputedStyle(root).getPropertyValue("--particle").trim();
+    particles.forEach((particle) => {
+      particle.color = `rgba(${particleColor}, ${particle.opacity})`;
+    });
   };
 
   const draw = (animate = true) => {
@@ -330,8 +342,8 @@ function initParticleCanvas() {
       }
 
       context.beginPath();
-      context.fillStyle = `rgba(${particleColor}, ${particle.opacity})`;
-      context.shadowColor = `rgba(${particleColor}, ${particle.opacity})`;
+      context.fillStyle = particle.color;
+      context.shadowColor = particle.color;
       context.shadowBlur = particle.blur;
       context.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
       context.fill();
@@ -340,32 +352,49 @@ function initParticleCanvas() {
   };
 
   const animate = () => {
+    if (!isAnimating) return;
     draw(true);
     animationFrame = window.requestAnimationFrame(animate);
   };
 
-  const updateMotionPreference = () => {
+  const stopAnimation = () => {
+    isAnimating = false;
     window.cancelAnimationFrame(animationFrame);
-    if (reducedMotionQuery.matches) draw(false);
-    else animate();
+    animationFrame = 0;
+  };
+
+  const updateAnimationState = () => {
+    stopAnimation();
+    if (reducedMotionQuery.matches || document.hidden) {
+      draw(false);
+      return;
+    }
+
+    isAnimating = true;
+    animationFrame = window.requestAnimationFrame(animate);
   };
 
   const resize = () => {
-    window.cancelAnimationFrame(animationFrame);
-    setCanvasSize();
-    updateMotionPreference();
+    if (resizeFrame) return;
+    resizeFrame = window.requestAnimationFrame(() => {
+      resizeFrame = 0;
+      stopAnimation();
+      setCanvasSize();
+      updateAnimationState();
+    });
   };
 
   updateParticleColor();
   setCanvasSize();
-  updateMotionPreference();
+  updateAnimationState();
 
   window.addEventListener("resize", resize);
+  document.addEventListener("visibilitychange", updateAnimationState);
   window.addEventListener("portfolio-theme-change", () => {
     updateParticleColor();
-    if (reducedMotionQuery.matches) draw(false);
+    if (reducedMotionQuery.matches && !document.hidden) draw(false);
   });
-  reducedMotionQuery.addEventListener("change", updateMotionPreference);
+  reducedMotionQuery.addEventListener("change", updateAnimationState);
 }
 
 function initPortfolio() {

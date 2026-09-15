@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Before launch: replace this placeholder origin with the final production domain. -->
   <url>
-    <loc>https://replace-with-final-domain.example/</loc>
+    <loc>https://ambdev.co.uk/</loc>
   </url>
 </urlset>

@@ -30,11 +30,6 @@ status: "Demo build"
 
 ## Before Going Live
 
-- [ ] Replace the canonical URL placeholder in `index.html`.
-- [ ] Replace the Open Graph URL placeholder in `index.html`.
-- [ ] Add `assets/images/social-preview.jpg` and its Open Graph/Twitter image metadata if needed.
-- [ ] Replace the sitemap domain placeholder in `robots.txt`.
-- [ ] Replace the homepage domain placeholder in `sitemap.xml`.
 - [ ] Test the enquiry form after deployment.
 - [ ] Verify the WhatsApp link.
 - [ ] Run Lighthouse or PageSpeed Insights.
